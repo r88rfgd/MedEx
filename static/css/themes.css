@@ -1,0 +1,13 @@
+body.theme-dark {
+    --primary-color: #3b82f6;
+    --secondary-color: #60a5fa;
+    --text-color: #e5e7eb;
+    --bg-color: #111827;
+    --card-bg: #1f2937;
+    --border-color: #374151;
+    --success-color: #059669;
+    --danger-color: #dc2626;
+    --header-color: #1e40af;
+    --footer-bg: #0f172a;
+    --footer-text: #f9fafb;
+}

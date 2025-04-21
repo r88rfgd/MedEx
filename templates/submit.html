@@ -1,0 +1,104 @@
+<!-- templates/submit.html -->
+{% extends 'base.html' %}
+
+{% block title %}Submit Project - MedEx{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <section class="submit-form">
+            <h2>Submit Your Project</h2>
+            <form action="{{ url_for('submit_project') }}" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="title">Project Title:</label>
+                    <input type="text" id="title" name="title" required>
+                </div>
+                <div class="form-group">
+                    <label for="category">Category:</label>
+                    <select id="category" name="category" required>
+                        <option value="">-- Select Category --</option>
+                        <option value="medical-equipment">Medical Equipment</option>
+                        <option value="robotics">Robotics</option>
+                        <option value="hybrid">Hybrid Solutions</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="description">Project Description:</label>
+                    <textarea id="description" name="description" rows="5" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="github_url">GitHub Repository URL (Optional):</label>
+                    <input type="url" id="github_url" name="github_url" placeholder="https://github.com/username/repository">
+                    <p class="form-help">Link to your project's GitHub repository</p>
+                </div>
+                <div class="form-group">
+                    <label for="video_url">Video URL (YouTube or Google Drive, Optional):</label>
+                    <input type="url" id="video_url" name="video_url" placeholder="https://www.youtube.com/watch?v=example">
+                    <p class="form-help">Paste YouTube or Google Drive share link</p>
+                </div>
+                <div class="form-group">
+                    <label for="photos">Project Photos (Optional):</label>
+                    <input type="file" id="photos" name="photos" multiple accept="image/*">
+                    <p class="form-help">Upload up to 5 images (Max 16MB total)</p>
+                    <div id="photo-preview" class="photo-preview"></div>
+                </div>
+                <div class="form-group">
+                    <label for="layout">Project Layout:</label>
+                    <select id="layout" name="layout">
+                        <option value="standard">Standard Layout</option>
+                        <option value="photo-first">Photos First</option>
+                        <option value="video-first">Video First</option>
+                        <option value="gallery">Gallery Style</option>
+                    </select>
+                    <p class="form-help">Choose how you want your project to be displayed</p>
+                </div>
+                <button type="submit" class="btn primary">Submit Project</button>
+            </form>
+        </section>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Preview uploaded photos
+        const photoInput = document.getElementById('photos');
+        const photoPreview = document.getElementById('photo-preview');
+        
+        photoInput.addEventListener('change', function() {
+            photoPreview.innerHTML = '';
+            
+            if (this.files.length > 5) {
+                alert('Please select a maximum of 5 photos.');
+                this.value = '';
+                return;
+            }
+            
+            let totalSize = 0;
+            for (let i = 0; i < this.files.length; i++) {
+                totalSize += this.files[i].size;
+                
+                if (totalSize > 16 * 1024 * 1024) { // 16MB
+                    alert('Total file size exceeds 16MB. Please select smaller files.');
+                    this.value = '';
+                    photoPreview.innerHTML = '';
+                    return;
+                }
+                
+                const reader = new FileReader();
+                const div = document.createElement('div');
+                div.className = 'preview-item';
+                
+                reader.onload = function(e) {
+                    div.innerHTML = `
+                        <img src="${e.target.result}" alt="Preview">
+                        <p>${this.files[i].name}</p>
+                    `;
+                }.bind(this);
+                
+                reader.readAsDataURL(this.files[i]);
+                photoPreview.appendChild(div);
+            }
+        });
+    });
+</script>
+{% endblock %}

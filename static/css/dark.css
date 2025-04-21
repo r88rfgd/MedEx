@@ -1,0 +1,12 @@
+/* dark.css is empty since the dark theme is already the default in style.css */
+/* This file exists for compatibility with the theme toggle function */
+
+body.theme-dark .flash-message {
+    background-color: #065f46;
+    color: #d1fae5;
+    border-left-color: #059669;
+}
+
+body.theme-dark .admin-table th {
+    background-color: #374151;
+}

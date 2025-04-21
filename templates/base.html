@@ -1,0 +1,94 @@
+<!-- templates/base.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}MedEx - Medical Equipment & Robotics Repository{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    {% if theme == 'dark' %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dark.css') }}">
+    {% endif %}
+</head>
+<body class="theme-{{ theme|default('dark') }}">
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="{{ url_for('index') }}">
+                    <i class="fas fa-heartbeat"></i> MedEx
+                </a>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li><a href="{{ url_for('index') }}">Projects</a></li>
+                    <li><a href="{{ url_for('submit_project') }}">Submit Project</a></li>
+                </ul>
+            </nav>
+            <div class="nav-right">
+                <a href="{{ url_for('toggle_theme') }}" class="theme-toggle">
+                    {% if theme == 'dark' %}
+                        <i class="fas fa-sun"></i>
+                    {% else %}
+                        <i class="fas fa-moon"></i>
+                    {% endif %}
+                </a>
+                {% if session.username %}
+                    <div class="user-menu">
+                        <span>{{ session.username }}</span>
+                        {% if session.is_admin %}
+                            <a href="{{ url_for('admin_panel') }}" class="btn small">Admin</a>
+                        {% endif %}
+                        <a href="{{ url_for('logout') }}" class="btn small">Logout</a>
+                    </div>
+                {% else %}
+                    <a href="{{ url_for('login') }}" class="btn sign-in">Sign In</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <main>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="container">
+                    <div class="flashes">
+                        {% for message in messages %}
+                            <div class="flash-message">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 MedEx - Medical Equipment & Robotics Repository. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>
+
+<!-- templates/index.html -->
+
+
+<!-- templates/login.html -->
+
+
+<!-- templates/register.html -->
+
+
+<!-- templates/submit.html -->
+
+
+<!-- templates/project_detail.html -->
+
+
+<!-- templates/admin.html -->

@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+
+{% block title %}MedEx - Medical Equipment & Robotics Repository{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <section class="hero-section">
+            <div class="hero-content">
+                <h1>Medical Equipment & Robotics Repository</h1>
+                <p>A platform to showcase and discover innovative medical technologies and robotics projects</p>
+                <div class="hero-buttons">
+                    <a href="#projects" class="btn primary">Explore Projects</a>
+                    <a href="{{ url_for('submit_project') }}" class="btn secondary">Submit Your Project</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <svg viewBox="0 0 500 400" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Background frame -->
+                    <rect x="40" y="40" width="420" height="320" rx="15" fill="#1e293b" stroke="#3b82f6" stroke-width="2"/>
+                    
+                    <!-- Robotic arm base -->
+                    <rect x="80" y="260" width="120" height="60" rx="10" fill="#334155" stroke="#64748b" stroke-width="2"/>
+                    <rect x="110" y="240" width="60" height="20" rx="5" fill="#475569" stroke="#64748b" stroke-width="1"/>
+                    
+                    <!-- Base control panel -->
+                    <rect x="100" y="270" width="80" height="30" rx="5" fill="#1e293b" stroke="#64748b" stroke-width="1"/>
+                    <circle cx="120" cy="285" r="5" fill="#ef4444"/>
+                    <circle cx="140" cy="285" r="5" fill="#eab308"/>
+                    <circle cx="160" cy="285" r="5" fill="#22c55e"/>
+                    
+                    <!-- Robotic arm segments -->
+                    <rect x="130" y="180" width="20" height="60" rx="3" fill="#3b82f6" stroke="#60a5fa" stroke-width="1"/>
+                    <rect x="120" y="130" width="40" height="50" rx="3" fill="#2563eb" stroke="#60a5fa" stroke-width="1"/>
+                    
+                    <!-- Robotic arm joints -->
+                    <circle cx="140" cy="180" r="12" fill="#0f172a" stroke="#64748b" stroke-width="1"/>
+                    <circle cx="140" cy="180" r="5" fill="#94a3b8"/>
+                    <circle cx="140" cy="240" r="10" fill="#0f172a" stroke="#64748b" stroke-width="1"/>
+                    <circle cx="140" cy="240" r="4" fill="#94a3b8"/>
+                    
+                    <!-- Robotic hand/surgical tool -->
+                    <path d="M 120 100 Q 140 80 160 100 L 160 130 L 120 130 Z" fill="#0ea5e9" stroke="#38bdf8" stroke-width="1"/>
+                    <circle cx="130" cy="110" r="5" fill="#bae6fd"/>
+                    <circle cx="150" cy="110" r="5" fill="#bae6fd"/>
+                    <rect x="135" y="120" width="10" height="5" rx="2" fill="#bae6fd"/>
+                    
+                    <!-- Medical scan/monitor screen -->
+                    <rect x="240" y="80" width="180" height="140" rx="5" fill="#0f172a" stroke="#3b82f6" stroke-width="2"/>
+                    <rect x="250" y="90" width="160" height="110" rx="3" fill="#1e293b"/>
+                    
+                    <!-- Medical scan content - body outline -->
+                    <path d="M 310 100 Q 330 100 330 110 Q 330 115 335 120 Q 345 125 345 130 
+                             Q 345 150 335 160 Q 335 170 330 175 Q 310 175 305 175 Q 300 170 300 160 
+                             Q 290 150 290 130 Q 290 125 300 120 Q 305 115 305 110 Q 305 100 310 100" 
+                          fill="none" stroke="#60a5fa" stroke-width="1"/>
+                    
+                    <!-- Heart rate monitor line -->
+                    <polyline points="250,180 260,180 265,160 270,195 275,180 285,180 295,180 305,180 310,160 315,195 320,180 330,180 340,180 350,180 355,160 360,195 365,180 375,180" 
+                              fill="none" stroke="#22c55e" stroke-width="1.5"/>
+                    
+                    <!-- Medical tablet device -->
+                    <rect x="310" y="240" width="100" height="70" rx="5" fill="#334155" stroke="#64748b" stroke-width="1"/>
+                    <rect x="320" y="250" width="80" height="50" rx="3" fill="#1e293b"/>
+                    
+                    <!-- Simple tablet content display -->
+                    <polyline points="330,260 340,270 350,265 360,275 370,260 380,280 390,270" 
+                              fill="none" stroke="#3b82f6" stroke-width="1.5"/>
+                    
+                    <!-- Direct connection lines between devices -->
+                    <path d="M 160 115 C 190 115, 210 90, 240 120" fill="none" stroke="#60a5fa" stroke-width="1.5" stroke-dasharray="5,3"/>
+                    <path d="M 360 220 C 350 230, 330 230, 320 240" fill="none" stroke="#60a5fa" stroke-width="1.5" stroke-dasharray="5,3"/>
+                    <path d="M 140 130 C 160 200, 270 240, 310 270" fill="none" stroke="#60a5fa" stroke-width="1.5" stroke-dasharray="5,3"/>
+                  </svg>
+            </div>
+        </section>
+
+        <section id="projects" class="projects-section">
+            <h2 class="section-heading">Featured Projects</h2>
+            
+            <div class="filter-controls">
+                <select id="category-filter">
+                    <option value="all">All Categories</option>
+                    <option value="medical-equipment">Medical Equipment</option>
+                    <option value="robotics">Robotics</option>
+                    <option value="hybrid">Hybrid Solutions</option>
+                </select>
+                <input type="text" id="search-input" placeholder="Search projects...">
+            </div>
+
+            <div class="project-grid" id="projects-container">
+                {% if projects %}
+                    {% for project in projects %}
+                        <div class="project-card" data-category="{{ project.category }}">
+                            <h4>{{ project.title }}</h4>
+                            <p class="project-description">{{ project.description|truncate(100) }}</p>
+                            <div class="project-meta">
+                                <span class="category">{{ project.category|replace('-', ' ')|title }}</span>
+                                <span class="author">By {{ project.submitted_by }}</span>
+                            </div>
+                            <a href="{{ url_for('view_project', project_id=project.id) }}" class="btn small primary">View Details</a>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div style="grid-column: 1/-1; text-align: center; background-color: var(--navy); padding: 2rem; border-radius: 8px;">
+                        <p>No projects submitted yet. Be the first to add one!</p>
+                        <a href="{{ url_for('submit_project') }}" class="btn primary" style="margin-top: 1rem;">Submit a Project</a>
+                    </div>
+                {% endif %}
+            </div>
+        </section>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{{ url_for('static', filename='js/filters.js') }}"></script>
+{% endblock %}
